@@ -1,0 +1,5 @@
+.build/
+*.xcresult/
+*.xcuserstate
+xcuserdata/
+.DS_Store

@@ -1,0 +1,39 @@
+name: WindowRace
+options:
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGNING_ALLOWED: NO
+    GENERATE_INFOPLIST_FILE: YES
+    TARGETED_DEVICE_FAMILY: "1,2"
+targets:
+  WindowRace:
+    type: application
+    platform: iOS
+    sources: [App]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.wcastand.window-race
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+  WindowRaceUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: WindowRace
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.wcastand.window-race.tests
+        TEST_TARGET_NAME: WindowRace
+schemes:
+  WindowRace:
+    build:
+      targets:
+        WindowRace: all
+        WindowRaceUITests: [test]
+    test:
+      targets: [WindowRaceUITests]
+      gatherCoverageData: false

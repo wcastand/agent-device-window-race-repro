@@ -1,0 +1,36 @@
+Native reproduction evidence (selected console excerpts)
+Date: 2026-09-27
+Host: macOS 27.0 arm64
+Xcode: 27.0 (27A266a)
+Simulator: iPhone 18 Pro, iOS 27.0
+Command: ./reproduce.sh <simulator-UDID>
+Script exit: 0 (expected original failure AND patched pass confirmed)
+Original resolver: exact upstream body, ignoring method name and indentation.
+Logs below omit unrelated build output; the absolute checkout prefix is removed.
+
+ORIGINAL (xcodebuild exit 65; expected failure)
+RESOLVE iteration=331 patched=false
+    t =     8.22s Get all elements bound by index for: Descendants matching type Window
+    t =     8.22s Checking existence of `Window (Element at index 0)`
+    t =     8.23s Find the Window (Element at index 0)
+    t =     8.23s Checking existence of `Window (Element at index 1)`
+    t =     8.24s Find the Window (Element at index 1)
+    t =     9.25s     Find the Window (Element at index 1) (retry 1)
+    t =    10.27s     Find the Window (Element at index 1) (retry 2)
+    t =    10.28s     Collecting debug information to assist test failure triage
+    t =    10.28s         Requesting snapshot of accessibility hierarchy for app with pid 34617
+    t =    10.29s     Requesting snapshot of accessibility hierarchy for app with pid 34617
+    t =    10.29s     Find: Descendants matching type Window
+    t =    10.30s     Find: Element at index 1
+    t =    10.30s     Requesting snapshot of accessibility hierarchy for app with pid 34617
+Tests/WindowRaceTests.swift:9: error: -[WindowRaceUITests.WindowRaceTests testOriginal] : Failed to get matching snapshot: No matches found for Element at index 1 from input {(
+    Window (Main)
+)}
+    t =    10.34s Tear Down
+Test Case '-[WindowRaceUITests.WindowRaceTests testOriginal]' failed (10.617 seconds).
+
+PATCHED (xcodebuild exit 0)
+COMPLETED count=3843 patched=true
+    t =    65.56s Terminate dev.wcastand.window-race:34671
+    t =    66.97s Tear Down
+Test Case '-[WindowRaceUITests.WindowRaceTests testPatched]' passed (67.029 seconds).

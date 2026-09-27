@@ -1,0 +1,22 @@
+--- a/apple/runner/AgentDeviceRunner/AgentDeviceRunnerUITests/RunnerTests+Interaction.swift
++++ b/apple/runner/AgentDeviceRunner/AgentDeviceRunnerUITests/RunnerTests+Interaction.swift
+@@ -226,12 +226,13 @@
+   /// display can never name a different window than the one the reference frame was measured on.
+   func resolveRunnerWindow(app: XCUIApplication) -> (window: XCUIElement?, frame: CGRect) {
+     let windows = app.windows.allElementsBoundByIndex
+-    var frames: [CGRect?] = []
+-    for window in windows {
+-      frames.append(window.exists ? window.frame : nil)
+-    }
+-    if let index = Self.firstUsableWindowIndex(frames: frames) {
+-      return (windows[index], frames[index] ?? .zero)
++    // Stop at the first usable window. Later keyboard/overlay windows can disappear
++    // between exists and frame, recording an XCTest failure before a valid tap.
++    for window in windows where window.exists {
++      let frame = window.frame
++      if !frame.isEmpty {
++        return (window, frame)
++      }
+     }
+     return (nil, app.frame)
+   }
